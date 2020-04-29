@@ -3,10 +3,41 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TuneReportViewer"
+        xmlns:local="clr-namespace:TuneReportViewer" xmlns:sdk="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="Tune Report Viewer" Height="514.5" Width="847.5">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Background="Blue">
 
-    </Grid>
+        </StackPanel>
+        <StackPanel DockPanel.Dock="Bottom" Background="Orange">
+            <StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="200"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                    </Grid.RowDefinitions>
+                    <UniformGrid Grid.Column="2" Rows="1">
+                        <Button Margin="5" Content="Search"/>
+                        <Button Margin="5">Export</Button>
+                    </UniformGrid>
+                </Grid>
+            </StackPanel>
+        </StackPanel>
+        <DockPanel Background="Green">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock FontSize="55" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap">Table</TextBlock>
+                <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+                <TextBlock Grid.Column="2" FontSize="55" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap">Chart</TextBlock>
+            </Grid>
+        </DockPanel>
+    </DockPanel>
 </Window>
