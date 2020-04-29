@@ -3,18 +3,24 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TuneReportViewer" xmlns:sdk="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
         mc:Ignorable="d"
         Title="Tune Report Viewer" Height="514.5" Width="847.5">
     <DockPanel>
         <DockPanel DockPanel.Dock="Top" Background="Blue" Height="30">
             <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
-                <Label Content="Timespan"/>
-                <ComboBox Margin="5" Width="20" DockPanel.Dock="Right"/>
-                <Label Content="From"/>
-                <DatePicker></DatePicker>
-                <Label Content="To"/>
-                <DatePicker></DatePicker>
+                <TextBlock Margin="5" Text="Timespan"/>
+                <ComboBox Margin="5" Text="All">
+                    <ComboBoxItem>1 month</ComboBoxItem>
+                    <ComboBoxItem>3 months</ComboBoxItem>
+                    <ComboBoxItem>6 months</ComboBoxItem>
+                    <ComboBoxItem>9 months</ComboBoxItem>
+                    <ComboBoxItem>1 year</ComboBoxItem>
+                    <ComboBoxItem>All</ComboBoxItem>
+                </ComboBox>
+                <TextBlock Margin="5" Text="From"/>
+                <DatePicker Margin="5" ></DatePicker>
+                <TextBlock Margin="5" Text="To"/>
+                <DatePicker Margin="5" ></DatePicker>
             </StackPanel>
             <DockPanel DockPanel.Dock="Right">
                 <Button Margin="5" Content="..." Width="20" DockPanel.Dock="Right"/>
