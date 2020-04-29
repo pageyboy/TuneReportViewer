@@ -7,25 +7,31 @@
         mc:Ignorable="d"
         Title="Tune Report Viewer" Height="514.5" Width="847.5">
     <DockPanel>
-        <StackPanel DockPanel.Dock="Top" Background="Blue">
-
-        </StackPanel>
-        <StackPanel DockPanel.Dock="Bottom" Background="Orange">
-            <StackPanel>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="200"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="30"/>
-                    </Grid.RowDefinitions>
-                    <UniformGrid Grid.Column="2" Rows="1">
-                        <Button Margin="5" Content="Search"/>
-                        <Button Margin="5">Export</Button>
-                    </UniformGrid>
-                </Grid>
+        <DockPanel DockPanel.Dock="Top" Background="Blue" Height="30">
+            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                <Label Content="Timespan"/>
+                <ComboBox Margin="5" Width="20" DockPanel.Dock="Right"/>
+                <Label Content="From"/>
+                <DatePicker></DatePicker>
+                <Label Content="To"/>
+                <DatePicker></DatePicker>
             </StackPanel>
+            <DockPanel DockPanel.Dock="Right">
+                <Button Margin="5" Content="..." Width="20" DockPanel.Dock="Right"/>
+                <TextBox Margin="5" DockPanel.Dock="Left"/>
+            </DockPanel>
+        </DockPanel>
+        <StackPanel DockPanel.Dock="Bottom" Background="Orange" Height="30">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="200"/>
+                </Grid.ColumnDefinitions>
+                <UniformGrid Grid.Column="2" Rows="1">
+                    <Button Margin="5" Content="Search"/>
+                    <Button Margin="5" Content="Export"/>
+                </UniformGrid>
+            </Grid>
         </StackPanel>
         <DockPanel Background="Green">
             <Grid>
