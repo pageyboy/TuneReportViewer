@@ -6,43 +6,35 @@ using System.Threading.Tasks;
 
 namespace TuneReportViewer.Model
 {
-    class QQQTuneReport
+
+    public struct fullReport
     {
-        public string fileName;
+        public bool polarity;
+        public bool tuneType;
+    }
 
-        struct massAbundance
+    public class QQQTuneReport
+    {
+        // Class members.
+        //
+        // Property.
+        public string fName;
+        public fullReport test;
+
+        // Method
+        public void ReadQQQReport()
         {
-            public float mass;
-            public int abundance;
+            fullReport aTest = new fullReport();
+            aTest.polarity = true;
+            this.test = aTest;
         }
 
-        struct tuneValuesPerResolution
+        // Instance Constructor.
+        public QQQTuneReport(string fName)
         {
-            public massAbundance mass1;
-            public massAbundance mass2;
-            public massAbundance mass3;
-            public massAbundance mass4;
-            public massAbundance mass5;
-            public massAbundance mass6;
+            this.fName = fName;
         }
-
-        struct instrParms
-        {
-            
-        }
-
-        struct fullReport
-        {
-            public tuneValuesPerResolution standard;
-            public tuneValuesPerResolution wide;
-            public tuneValuesPerResolution widest;
-        }
-
-        public void ReadQQQTuneReport()
-        {
-
-        }
-
 
     }
+
 }

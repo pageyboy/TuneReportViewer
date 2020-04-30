@@ -1,18 +1,6 @@
 ﻿using Ookii.Dialogs.Wpf;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using TuneReportViewer.Model;
 
 namespace TuneReportViewer
 {
@@ -24,6 +12,7 @@ namespace TuneReportViewer
         public MainWindow()
         {
             InitializeComponent();
+            txtBox_FolderPath.Text = "C:\\Users\\chripage\\OneDrive - Agilent Technologies\\Side Projects\\Visual Studio\\tune_report_viewer\\Old Versions\\Tune Report Viewer\\3_Example Data\\G6410B";
         }
 
         private void btn_BrowseClicked(object sender, RoutedEventArgs e)
@@ -39,7 +28,8 @@ namespace TuneReportViewer
 
         private void btn_SearchClicked(object sender, RoutedEventArgs e)
         {
-
+            DataReader myClass = new DataReader();
+            myClass.MainProgram();
         }
 
         private void btn_ExportClicked(object sender, RoutedEventArgs e)
