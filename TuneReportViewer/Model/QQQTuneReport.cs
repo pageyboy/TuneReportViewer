@@ -28,14 +28,14 @@ namespace TuneReportViewer.Model
 
         struct instrParms
         {
-            public float lens2RF;
+            
         }
 
         struct fullReport
         {
-            tuneValuesPerResolution standard;
-            tuneValuesPerResolution wide;
-            tuneValuesPerResolution widest;
+            public tuneValuesPerResolution standard;
+            public tuneValuesPerResolution wide;
+            public tuneValuesPerResolution widest;
         }
 
         public void ReadQQQTuneReport()
