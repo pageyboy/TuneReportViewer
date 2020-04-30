@@ -23,7 +23,7 @@
                 <DatePicker Margin="5" VerticalAlignment="Center"/>
             </StackPanel>
             <DockPanel DockPanel.Dock="Right">
-                <Button DockPanel.Dock="Right" Margin="5">
+                <Button DockPanel.Dock="Right" Margin="5" Click="btn_BrowseClicked">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Margin="5" VerticalAlignment="Center">Browse to Folder</TextBlock>
                     </StackPanel>
@@ -43,12 +43,12 @@
                     </ProgressBar>
                 </Grid>
                 <UniformGrid Grid.Column="1" Rows="1" VerticalAlignment="Center">
-                    <Button Margin="5">
+                    <Button Margin="5" Click="btn_SearchClicked">
                         <DockPanel>
                             <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left">Search</TextBlock>
                         </DockPanel>
                     </Button>
-                    <Button Margin="5" Content="Export"/>
+                    <Button Margin="5" Content="Export" Click="btn_ExportClicked"/>
                 </UniformGrid>
             </Grid>
         </DockPanel>

@@ -37,7 +37,6 @@ namespace TuneReportViewer
 
         private void btn_ExportClicked(object sender, RoutedEventArgs e)
         {
-
         }
     }
 }
