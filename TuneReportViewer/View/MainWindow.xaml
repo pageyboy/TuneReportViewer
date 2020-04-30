@@ -28,7 +28,7 @@
                         <TextBlock Margin="5" VerticalAlignment="Center">Browse to Folder</TextBlock>
                     </StackPanel>
                 </Button>
-                <TextBox Margin="5" DockPanel.Dock="Left" VerticalContentAlignment="Center"/>
+                <TextBox Name="txtBox_FolderPath" Margin="5" DockPanel.Dock="Left" VerticalContentAlignment="Center"/>
             </DockPanel>
         </DockPanel>
         <DockPanel DockPanel.Dock="Bottom" Background="Orange" Height="Auto" VerticalAlignment="Center">
