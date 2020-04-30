@@ -9,7 +9,7 @@
         <DockPanel DockPanel.Dock="Top" Background="Blue">
             <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
                 <TextBlock Margin="5" Text="Timespan" VerticalAlignment="Center"/>
-                <ComboBox Margin="5" SelectedIndex="5" VerticalAlignment="Center">
+                <ComboBox Margin="5" SelectedIndex="5" VerticalAlignment="Center" Width="80">
                     <ComboBoxItem>1 month</ComboBoxItem>
                     <ComboBoxItem>3 months</ComboBoxItem>
                     <ComboBoxItem>6 months</ComboBoxItem>

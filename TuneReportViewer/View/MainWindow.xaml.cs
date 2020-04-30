@@ -24,5 +24,20 @@ namespace TuneReportViewer
         {
             InitializeComponent();
         }
+
+        private void btn_BrowseClicked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btn_SearchClicked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btn_ExportClicked(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
