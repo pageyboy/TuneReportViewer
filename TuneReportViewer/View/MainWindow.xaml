@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Tune Report Viewer" Height="514.5" Width="847.5">
+        Title="Tune Report Viewer" Height="514.5" Width="847.5" MinWidth="800" MinHeight="400">
     <DockPanel>
         <DockPanel DockPanel.Dock="Top" Background="Blue">
             <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
@@ -25,8 +25,7 @@
             <DockPanel DockPanel.Dock="Right">
                 <Button DockPanel.Dock="Right" Margin="5">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock VerticalAlignment="Center">Browse to Folder</TextBlock>
-                        <Image Height="15" Margin="5,0,0,0" Source="/TuneReportViewer;component/resources/interface.png"/>
+                        <TextBlock Margin="5" VerticalAlignment="Center">Browse to Folder</TextBlock>
                     </StackPanel>
                 </Button>
                 <TextBox Margin="5" DockPanel.Dock="Left" VerticalContentAlignment="Center"/>
@@ -47,7 +46,6 @@
                     <Button Margin="5">
                         <DockPanel>
                             <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left">Search</TextBlock>
-                            <Image Height="15" Margin="5,0,0,0" DockPanel.Dock="Right" Source="/TuneReportViewer;component/resources/search.png"/>
                         </DockPanel>
                     </Button>
                     <Button Margin="5" Content="Export"/>
