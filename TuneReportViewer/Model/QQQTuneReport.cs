@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using System.IO;
+using System.Globalization;
 
 namespace TuneReportViewer.Model
 {
@@ -14,14 +16,15 @@ namespace TuneReportViewer.Model
         // Class members.
         //
         // Property.
-        public string fName;
+        public string folderPath;
         public fullReport report;
+        private string tuneReportFilePath;
+        public bool passStatus;
+        public DateTime tuneDateTime;
+        public string tuneType;
 
         public struct fullReport
         {
-            public string tuneType;
-            public DateTime tuneDateTime;
-            public bool failed;
             public polarity positive;
             public polarity negative;
             public polarity blank;
@@ -61,15 +64,38 @@ namespace TuneReportViewer.Model
         }
 
         // Method
+
+        private bool CheckStatus()
+        {
+            // All passed Check/Autotunes will have a QQQTuneReport.xml within the folder. If there is no file it has failed for one reason or another
+            // Probably a good place to determine whether the file is a Check/Autotune and the date/time it was created.
+            // Prefer to read from QQQTuneReport.xml file but if this is missing then this is the only way.
+
+            passStatus = File.Exists(tuneReportFilePath);
+            string[] dirs = tuneReportFilePath.Split('\\');
+            string trDirectory = dirs[dirs.Length - 2];
+            string[] trComps = trDirectory.Split('_');
+            this.tuneType = trComps[0];
+            DateTime.TryParseExact(trComps[1], new[] {"yyyyMMdd"}, CultureInfo.InvariantCulture, DateTimeStyles.None, out this.tuneDateTime);
+            return passStatus;
+
+        }
+
         public void ReadQQQReport()
         {
+
+            if (!CheckStatus())
+            {
+                return;
+            }
+
             fullReport report = new fullReport();
             report.negative.status = false;
             report.positive.status = false;
 
 
             XmlDocument doc = new XmlDocument();
-            doc.Load(fName);
+            doc.Load(tuneReportFilePath);
             Console.WriteLine(doc.DocumentElement.OuterXml);
             XmlNode root = doc.LastChild;
             if(root.HasChildNodes)
@@ -84,8 +110,6 @@ namespace TuneReportViewer.Model
                             Console.WriteLine(QQQTuneInfo.ChildNodes[x].Name);
                             switch (QQQTuneInfo.ChildNodes[x].Name)
                             {
-                                case "TuneReportType": report.tuneType = QQQTuneInfo.ChildNodes[x].InnerText; break;
-                                //case "TuneDateTime": report.tuneDateTime = DateTime.Parse(QQQTuneInfo.ChildNodes[x].InnerText); break;
                                 case "PositiveResults":
                                     report.positive = readPolarityResults(QQQTuneInfo.ChildNodes[x].FirstChild);
                                     break;
@@ -102,6 +126,8 @@ namespace TuneReportViewer.Model
             this.report = report;
 
         }
+
+        // Method to find nodes associated with each polarity
 
         private polarity readPolarityResults(XmlNode polarityNode)
         {
@@ -126,6 +152,8 @@ namespace TuneReportViewer.Model
             return results;
         }
         
+        // Method to find nodes associated with each Mass investigated
+
         private resolution readResolutionResults(XmlNode resolutionNode)
         {
             resolution results = this.report.blank.blank;
@@ -168,6 +196,8 @@ namespace TuneReportViewer.Model
 
             return results;
         }
+
+        // Method to read mass/abundance pairs from individual mass node
 
         private mzAb readMassResults(XmlNode massNode)
         {
@@ -250,9 +280,10 @@ namespace TuneReportViewer.Model
         }
 
         // Instance Constructor.
-        public QQQTuneReport(string fName)
+        public QQQTuneReport(string folderPath)
         {
-            this.fName = fName;
+            this.folderPath = folderPath;
+            this.tuneReportFilePath = folderPath + "\\QQQTuneReport.xml";
         }
 
     }

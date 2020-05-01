@@ -12,7 +12,7 @@ namespace TuneReportViewer.Model
         {
 
             // Create an object of type CustomClass.
-            QQQTuneReport tReport = new QQQTuneReport("C:\\Users\\chripage\\OneDrive - Agilent Technologies\\Side Projects\\Visual Studio\\tune_report_viewer\\Old Versions\\Tune Report Viewer\\3_Example Data\\G6410B\\Autotune_20160305_112548\\QQQTuneReport.xml");
+            QQQTuneReport tReport = new QQQTuneReport("C:\\Users\\chripage\\OneDrive - Agilent Technologies\\Side Projects\\Visual Studio\\tune_report_viewer\\Old Versions\\Tune Report Viewer\\3_Example Data\\G6410B\\Autotune_20160305_112548");
 
             tReport.ReadQQQReport();
             tReport.printStandardTuneReport();
