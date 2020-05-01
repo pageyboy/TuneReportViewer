@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.XPath;
 
 namespace TuneReportViewer.Model
 {
@@ -25,8 +28,10 @@ namespace TuneReportViewer.Model
         public void ReadQQQReport()
         {
             fullReport aTest = new fullReport();
-            aTest.polarity = true;
-            this.test = aTest;
+
+            XElement yourNode = XElement.Load(fName);
+            XElement test = yourNode.XPathSelectElement("//QQQTuneInfo[TuneReportType='Autotune'");
+
         }
 
         // Instance Constructor.
