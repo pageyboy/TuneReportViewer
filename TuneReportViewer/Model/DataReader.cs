@@ -4,12 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace TuneReportViewer.Model
 {
     class DataReader
     {
-        public void MainProgram(string selectedDirectory)
+        public List<QQQTuneReport> MainProgram(string selectedDirectory)
         {
             // Create List of tune reports
             List<QQQTuneReport> trList = new List<QQQTuneReport>();
@@ -17,17 +18,20 @@ namespace TuneReportViewer.Model
             // Loop through all folders in folder that's specified
             foreach (string subDir in foldersInDirectory)
             {
-                Console.WriteLine(subDir);
+                // Console.WriteLine(subDir);
                 string[] subDirComps = subDir.Split('\\');
                 // Check that each folder is a tune folder
                 if (subDirComps[subDirComps.Length - 1].Contains("tune") == true)
                 {
                     QQQTuneReport tReport = new QQQTuneReport(subDir);
                     tReport.ReadQQQReport();
-                    tReport.printStandardTuneReport();
+                    //tReport.printStandardTuneReport();
                     trList.Add(tReport);
                 }
-            }           
+            }
+
+            return trList;
+
         }
     }
 }

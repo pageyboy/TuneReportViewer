@@ -1,6 +1,7 @@
 ﻿using Ookii.Dialogs.Wpf;
 using System.Windows;
 using TuneReportViewer.Model;
+using System.Collections.Generic;
 
 namespace TuneReportViewer
 {
@@ -28,8 +29,10 @@ namespace TuneReportViewer
 
         private void btn_SearchClicked(object sender, RoutedEventArgs e)
         {
-            DataReader myClass = new DataReader();
-            myClass.MainProgram(txtBox_FolderPath.Text);
+            DataReader dataReader = new DataReader();
+            List<QQQTuneReport> qqqTRList = dataReader.MainProgram(txtBox_FolderPath.Text);
+            //dg_QQQTuneReport.AutoGenerateColumns = false;
+            test.ItemsSource = qqqTRList;
         }
 
         private void btn_ExportClicked(object sender, RoutedEventArgs e)

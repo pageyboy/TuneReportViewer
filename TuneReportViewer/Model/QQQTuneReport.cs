@@ -16,51 +16,47 @@ namespace TuneReportViewer.Model
         // Class members.
         //
         // Property.
-        public string folderPath;
-        public fullReport report;
-        private string tuneReportFilePath;
-        public bool passStatus;
-        public DateTime tuneDateTime;
-        public string tuneType;
+        public string folderPath { get; set; }
+        public fullReport report { get; set; }
+        private string tuneReportFilePath { get; set; }
+        public bool passStatus { get; set; }
+        public DateTime tuneDateTime { get; set; }
+        public string tuneType { get; set; }
 
-        public struct fullReport
+        public class fullReport
         {
-            public polarity positive;
-            public polarity negative;
-            public polarity blank;
+            public polarity positive { get; set; }
+            public polarity negative { get; set; }
         }
 
-        public struct polarity
+        public class polarity
         {
-            public bool polarityPerformed;
-            public resolution standard;
-            public resolution wide;
-            public resolution widest;
-            public resolution blank;
+            public bool polarityPerformed { get; set; }
+            public resolution standard { get; set; }
+            public resolution wide { get; set; }
+            public resolution widest { get; set; }
         }
 
-        public struct resolution
+        public class resolution
         {
-            public mzAb ms1mass1;
-            public mzAb ms1mass2;
-            public mzAb ms1mass3;
-            public mzAb ms1mass4;
-            public mzAb ms1mass5;
-            public mzAb ms1mass6;
-            public mzAb ms2mass1;
-            public mzAb ms2mass2;
-            public mzAb ms2mass3;
-            public mzAb ms2mass4;
-            public mzAb ms2mass5;
-            public mzAb ms2mass6;
-            public mzAb blank;
+            public mzAb ms1mass1 { get; set; }
+            public mzAb ms1mass2 { get; set; }
+            public mzAb ms1mass3 { get; set; }
+            public mzAb ms1mass4 { get; set; }
+            public mzAb ms1mass5 { get; set; }
+            public mzAb ms1mass6 { get; set; }
+            public mzAb ms2mass1 { get; set; }
+            public mzAb ms2mass2 { get; set; }
+            public mzAb ms2mass3 { get; set; }
+            public mzAb ms2mass4 { get; set; }
+            public mzAb ms2mass5 { get; set; }
+            public mzAb ms2mass6 { get; set; }
         }
 
-        public struct mzAb
+        public class mzAb
         {
-            public float mzExpected;
-            public float abundance;
-            public bool blank;
+            public float mzExpected { get; set; }
+            public float abundance { get; set; }
         }
 
         // Method
@@ -75,9 +71,22 @@ namespace TuneReportViewer.Model
             string[] dirs = this.folderPath.Split('\\');
             string trDirectory = dirs[dirs.Length - 1];
             string[] trComps = trDirectory.Split('_');
+            if (trComps.Length != 3)
+            {
+                return false;
+            }
             this.tuneType = trComps[0];
             string dateTimeString = trComps[1] + trComps[2];
-            DateTime.TryParseExact(dateTimeString, new[] {"yyyyMMddHHmmss"}, CultureInfo.InvariantCulture, DateTimeStyles.None, out this.tuneDateTime);
+            try
+            {
+                DateTime temp;
+                DateTime.TryParseExact(dateTimeString, new[] { "yyyyMMddHHmmss" }, CultureInfo.InvariantCulture, DateTimeStyles.None, out temp);
+                this.tuneDateTime = temp;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
             return passStatus;
 
         }
@@ -93,15 +102,17 @@ namespace TuneReportViewer.Model
             // Initialize report and set polarityPerformed flags to false by default. If the nodes aren't observed then they weren't run and so are false.
 
             fullReport report = new fullReport();
-            report.negative.polarityPerformed = false;
-            report.positive.polarityPerformed = false;
+            polarity positive = new polarity();
+            polarity negative = new polarity();
+            negative.polarityPerformed = false;
+            positive.polarityPerformed = false;
 
             // Create new instance of the document and navigate to the Positive and Negative node.
             // Possibly better way to do this without the loops. So far unable to make other solutions work appropriately.
 
             XmlDocument doc = new XmlDocument();
             doc.Load(tuneReportFilePath);
-            Console.WriteLine(doc.DocumentElement.OuterXml);
+            // Console.WriteLine(doc.DocumentElement.OuterXml);
             XmlNode root = doc.LastChild;
             if(root.HasChildNodes)
             {
@@ -112,7 +123,7 @@ namespace TuneReportViewer.Model
                         XmlNode QQQTuneInfo = root.ChildNodes[i];
                         for (int x = 0; x < QQQTuneInfo.ChildNodes.Count; x++)
                         {
-                            Console.WriteLine(QQQTuneInfo.ChildNodes[x].Name);
+                            // Console.WriteLine(QQQTuneInfo.ChildNodes[x].Name);
                             switch (QQQTuneInfo.ChildNodes[x].Name)
                             {
                                 // Get the results for each polarity. If the polarity has been performed then set the flag to try after it's been
@@ -140,7 +151,7 @@ namespace TuneReportViewer.Model
 
         private polarity readPolarityResults(XmlNode polarityNode)
         {
-            polarity results = this.report.blank;
+            polarity results = new polarity();
             for (int i = 0; i < polarityNode.ChildNodes.Count; i++)
             {
                 switch (polarityNode.ChildNodes[i].Name)
@@ -165,12 +176,12 @@ namespace TuneReportViewer.Model
 
         private resolution readResolutionResults(XmlNode resolutionNode)
         {
-            resolution results = this.report.blank.blank;
+            resolution results = new resolution();
             int ms1masses = 0;
             int ms2masses = 0;
             for (int i = 0; i < resolutionNode.ChildNodes.Count; i++)
             {
-                Console.WriteLine(resolutionNode.ChildNodes[i].Name);
+                // Console.WriteLine(resolutionNode.ChildNodes[i].Name);
                 switch (resolutionNode.ChildNodes[i].Name)
                 {
                     case "MS1ScanMassList":
@@ -210,7 +221,7 @@ namespace TuneReportViewer.Model
 
         private mzAb readMassResults(XmlNode massNode)
         {
-            mzAb results = this.report.blank.blank.blank;
+            mzAb results = new mzAb();
 
             for (int i = 0; i < massNode.ChildNodes.Count; i++)
             {
@@ -227,8 +238,8 @@ namespace TuneReportViewer.Model
                 }
             }
 
-            Console.WriteLine(results.mzExpected);
-            Console.WriteLine(results.abundance);
+            // Console.WriteLine(results.mzExpected);
+            // Console.WriteLine(results.abundance);
             return results;
         }
 
@@ -237,9 +248,9 @@ namespace TuneReportViewer.Model
         public void printStandardTuneReport()
         {
 
-            Console.WriteLine(this.tuneType);
-            Console.WriteLine(this.tuneDateTime.ToString("dd MMMM yyyy hh:mm:ss tt"));
-            Console.WriteLine(this.tuneReportFilePath);
+            // Console.WriteLine(this.tuneType);
+            // Console.WriteLine(this.tuneDateTime.ToString("dd MMMM yyyy hh:mm:ss tt"));
+            // Console.WriteLine(this.tuneReportFilePath);
             if (this.passStatus)
             {
                 if (this.report.positive.polarityPerformed)
@@ -310,7 +321,7 @@ namespace TuneReportViewer.Model
         {
             this.folderPath = folderPath;
             this.tuneReportFilePath = folderPath + "\\QQQTuneReport.xml";
-            Console.WriteLine(this.tuneReportFilePath);
+            // Console.WriteLine(this.tuneReportFilePath);
         }
 
     }

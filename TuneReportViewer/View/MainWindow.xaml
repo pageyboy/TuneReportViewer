@@ -346,7 +346,8 @@
                     <ColumnDefinition Width="2"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock FontSize="55" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap"><Run Text="Table"/></TextBlock>
+                <DataGrid Name="test" ItemsSource="{Binding}">
+                </DataGrid>
                 <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
                 <TextBlock Grid.Column="2" FontSize="55" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap"><Run Text="Chart"/></TextBlock>
             </Grid>
