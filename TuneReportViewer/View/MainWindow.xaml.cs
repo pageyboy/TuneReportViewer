@@ -29,7 +29,7 @@ namespace TuneReportViewer
         private void btn_SearchClicked(object sender, RoutedEventArgs e)
         {
             DataReader myClass = new DataReader();
-            myClass.MainProgram();
+            myClass.MainProgram(txtBox_FolderPath.Text);
         }
 
         private void btn_ExportClicked(object sender, RoutedEventArgs e)

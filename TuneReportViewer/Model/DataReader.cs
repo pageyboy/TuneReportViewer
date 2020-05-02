@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,14 +9,25 @@ namespace TuneReportViewer.Model
 {
     class DataReader
     {
-        public void MainProgram()
+        public void MainProgram(string selectedDirectory)
         {
-
-            // Create an object of type CustomClass.
-            QQQTuneReport tReport = new QQQTuneReport("C:\\Users\\chripage\\OneDrive - Agilent Technologies\\Side Projects\\Visual Studio\\tune_report_viewer\\Old Versions\\Tune Report Viewer\\3_Example Data\\G6410B\\Autotune_20160305_112548");
-
-            tReport.ReadQQQReport();
-            tReport.printStandardTuneReport();
+            // Create List of tune reports
+            List<QQQTuneReport> trList = new List<QQQTuneReport>();
+            string[] foldersInDirectory = Directory.GetDirectories(selectedDirectory);
+            // Loop through all folders in folder that's specified
+            foreach (string subDir in foldersInDirectory)
+            {
+                Console.WriteLine(subDir);
+                string[] subDirComps = subDir.Split('\\');
+                // Check that each folder is a tune folder
+                if (subDirComps[subDirComps.Length - 1].Contains("tune") == true)
+                {
+                    QQQTuneReport tReport = new QQQTuneReport(subDir);
+                    tReport.ReadQQQReport();
+                    tReport.printStandardTuneReport();
+                    trList.Add(tReport);
+                }
+            }           
         }
     }
 }

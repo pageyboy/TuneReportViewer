@@ -72,11 +72,12 @@ namespace TuneReportViewer.Model
             // Prefer to read from QQQTuneReport.xml file but if this is missing then this is the only way.
 
             passStatus = File.Exists(tuneReportFilePath);
-            string[] dirs = tuneReportFilePath.Split('\\');
-            string trDirectory = dirs[dirs.Length - 2];
+            string[] dirs = this.folderPath.Split('\\');
+            string trDirectory = dirs[dirs.Length - 1];
             string[] trComps = trDirectory.Split('_');
             this.tuneType = trComps[0];
-            DateTime.TryParseExact(trComps[1] + trComps[2], new[] {"yyyyMMddhhmmss"}, CultureInfo.InvariantCulture, DateTimeStyles.None, out this.tuneDateTime);
+            string dateTimeString = trComps[1] + trComps[2];
+            DateTime.TryParseExact(dateTimeString, new[] {"yyyyMMddHHmmss"}, CultureInfo.InvariantCulture, DateTimeStyles.None, out this.tuneDateTime);
             return passStatus;
 
         }
@@ -309,6 +310,7 @@ namespace TuneReportViewer.Model
         {
             this.folderPath = folderPath;
             this.tuneReportFilePath = folderPath + "\\QQQTuneReport.xml";
+            Console.WriteLine(this.tuneReportFilePath);
         }
 
     }
