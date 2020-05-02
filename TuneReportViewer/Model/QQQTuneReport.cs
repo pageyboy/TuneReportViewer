@@ -32,7 +32,7 @@ namespace TuneReportViewer.Model
 
         public struct polarity
         {
-            public bool status;
+            public bool polarityPerformed;
             public resolution standard;
             public resolution wide;
             public resolution widest;
@@ -76,7 +76,7 @@ namespace TuneReportViewer.Model
             string trDirectory = dirs[dirs.Length - 2];
             string[] trComps = trDirectory.Split('_');
             this.tuneType = trComps[0];
-            DateTime.TryParseExact(trComps[1], new[] {"yyyyMMdd"}, CultureInfo.InvariantCulture, DateTimeStyles.None, out this.tuneDateTime);
+            DateTime.TryParseExact(trComps[1] + trComps[2], new[] {"yyyyMMddhhmmss"}, CultureInfo.InvariantCulture, DateTimeStyles.None, out this.tuneDateTime);
             return passStatus;
 
         }
@@ -89,10 +89,14 @@ namespace TuneReportViewer.Model
                 return;
             }
 
-            fullReport report = new fullReport();
-            report.negative.status = false;
-            report.positive.status = false;
+            // Initialize report and set polarityPerformed flags to false by default. If the nodes aren't observed then they weren't run and so are false.
 
+            fullReport report = new fullReport();
+            report.negative.polarityPerformed = false;
+            report.positive.polarityPerformed = false;
+
+            // Create new instance of the document and navigate to the Positive and Negative node.
+            // Possibly better way to do this without the loops. So far unable to make other solutions work appropriately.
 
             XmlDocument doc = new XmlDocument();
             doc.Load(tuneReportFilePath);
@@ -110,11 +114,15 @@ namespace TuneReportViewer.Model
                             Console.WriteLine(QQQTuneInfo.ChildNodes[x].Name);
                             switch (QQQTuneInfo.ChildNodes[x].Name)
                             {
+                                // Get the results for each polarity. If the polarity has been performed then set the flag to try after it's been
+                                // successfully parsed.
                                 case "PositiveResults":
                                     report.positive = readPolarityResults(QQQTuneInfo.ChildNodes[x].FirstChild);
+                                    report.positive.polarityPerformed = true;
                                     break;
                                 case "NegativeResults":
                                     report.negative = readPolarityResults(QQQTuneInfo.ChildNodes[x].FirstChild);
+                                    report.negative.polarityPerformed = true;
                                     break;
                                 default: break;
                             }
@@ -223,59 +231,76 @@ namespace TuneReportViewer.Model
             return results;
         }
 
+        // Method to print all results to the console.
+
         public void printStandardTuneReport()
         {
-            Console.WriteLine(this.report.positive.standard.ms1mass1.mzExpected);
-            Console.WriteLine(this.report.positive.standard.ms1mass1.abundance);
-            Console.WriteLine(this.report.positive.standard.ms1mass2.mzExpected);
-            Console.WriteLine(this.report.positive.standard.ms1mass2.abundance);
-            Console.WriteLine(this.report.positive.standard.ms1mass3.mzExpected);
-            Console.WriteLine(this.report.positive.standard.ms1mass3.abundance);
-            Console.WriteLine(this.report.positive.standard.ms1mass4.mzExpected);
-            Console.WriteLine(this.report.positive.standard.ms1mass4.abundance);
-            Console.WriteLine(this.report.positive.standard.ms1mass5.mzExpected);
-            Console.WriteLine(this.report.positive.standard.ms1mass5.abundance);
-            Console.WriteLine(this.report.positive.standard.ms1mass6.mzExpected);
-            Console.WriteLine(this.report.positive.standard.ms1mass6.abundance);
 
-            Console.WriteLine(this.report.positive.standard.ms2mass1.mzExpected);
-            Console.WriteLine(this.report.positive.standard.ms2mass1.abundance);
-            Console.WriteLine(this.report.positive.standard.ms2mass2.mzExpected);
-            Console.WriteLine(this.report.positive.standard.ms2mass2.abundance);
-            Console.WriteLine(this.report.positive.standard.ms2mass3.mzExpected);
-            Console.WriteLine(this.report.positive.standard.ms2mass3.abundance);
-            Console.WriteLine(this.report.positive.standard.ms2mass4.mzExpected);
-            Console.WriteLine(this.report.positive.standard.ms2mass4.abundance);
-            Console.WriteLine(this.report.positive.standard.ms2mass5.mzExpected);
-            Console.WriteLine(this.report.positive.standard.ms2mass5.abundance);
-            Console.WriteLine(this.report.positive.standard.ms2mass6.mzExpected);
-            Console.WriteLine(this.report.positive.standard.ms2mass6.abundance);
+            Console.WriteLine(this.tuneType);
+            Console.WriteLine(this.tuneDateTime.ToString("dd MMMM yyyy hh:mm:ss tt"));
+            Console.WriteLine(this.tuneReportFilePath);
+            if (this.passStatus)
+            {
+                if (this.report.positive.polarityPerformed)
+                {
+                    Console.Write(this.report.positive.standard.ms1mass1.mzExpected + ": ");
+                    Console.WriteLine(this.report.positive.standard.ms1mass1.abundance);
+                    Console.Write(this.report.positive.standard.ms1mass2.mzExpected + ": ");
+                    Console.WriteLine(this.report.positive.standard.ms1mass2.abundance);
+                    Console.Write(this.report.positive.standard.ms1mass3.mzExpected + ": ");
+                    Console.WriteLine(this.report.positive.standard.ms1mass3.abundance);
+                    Console.Write(this.report.positive.standard.ms1mass4.mzExpected + ": ");
+                    Console.WriteLine(this.report.positive.standard.ms1mass4.abundance);
+                    Console.Write(this.report.positive.standard.ms1mass5.mzExpected + ": ");
+                    Console.WriteLine(this.report.positive.standard.ms1mass5.abundance);
+                    Console.Write(this.report.positive.standard.ms1mass6.mzExpected + ": ");
+                    Console.WriteLine(this.report.positive.standard.ms1mass6.abundance);
 
-            Console.WriteLine(this.report.negative.standard.ms1mass1.mzExpected);
-            Console.WriteLine(this.report.negative.standard.ms1mass1.abundance);
-            Console.WriteLine(this.report.negative.standard.ms1mass2.mzExpected);
-            Console.WriteLine(this.report.negative.standard.ms1mass2.abundance);
-            Console.WriteLine(this.report.negative.standard.ms1mass3.mzExpected);
-            Console.WriteLine(this.report.negative.standard.ms1mass3.abundance);
-            Console.WriteLine(this.report.negative.standard.ms1mass4.mzExpected);
-            Console.WriteLine(this.report.negative.standard.ms1mass4.abundance);
-            Console.WriteLine(this.report.negative.standard.ms1mass5.mzExpected);
-            Console.WriteLine(this.report.negative.standard.ms1mass5.abundance);
-            Console.WriteLine(this.report.negative.standard.ms1mass6.mzExpected);
-            Console.WriteLine(this.report.negative.standard.ms1mass6.abundance);
+                    Console.Write(this.report.positive.standard.ms2mass1.mzExpected + ": ");
+                    Console.WriteLine(this.report.positive.standard.ms2mass1.abundance);
+                    Console.Write(this.report.positive.standard.ms2mass2.mzExpected + ": ");
+                    Console.WriteLine(this.report.positive.standard.ms2mass2.abundance);
+                    Console.Write(this.report.positive.standard.ms2mass3.mzExpected + ": ");
+                    Console.WriteLine(this.report.positive.standard.ms2mass3.abundance);
+                    Console.Write(this.report.positive.standard.ms2mass4.mzExpected + ": ");
+                    Console.WriteLine(this.report.positive.standard.ms2mass4.abundance);
+                    Console.Write(this.report.positive.standard.ms2mass5.mzExpected + ": ");
+                    Console.WriteLine(this.report.positive.standard.ms2mass5.abundance);
+                    Console.Write(this.report.positive.standard.ms2mass6.mzExpected + ": ");
+                    Console.WriteLine(this.report.positive.standard.ms2mass6.abundance);
+                }
 
-            Console.WriteLine(this.report.negative.standard.ms2mass1.mzExpected);
-            Console.WriteLine(this.report.negative.standard.ms2mass1.abundance);
-            Console.WriteLine(this.report.negative.standard.ms2mass2.mzExpected);
-            Console.WriteLine(this.report.negative.standard.ms2mass2.abundance);
-            Console.WriteLine(this.report.negative.standard.ms2mass3.mzExpected);
-            Console.WriteLine(this.report.negative.standard.ms2mass3.abundance);
-            Console.WriteLine(this.report.negative.standard.ms2mass4.mzExpected);
-            Console.WriteLine(this.report.negative.standard.ms2mass4.abundance);
-            Console.WriteLine(this.report.negative.standard.ms2mass5.mzExpected);
-            Console.WriteLine(this.report.negative.standard.ms2mass5.abundance);
-            Console.WriteLine(this.report.negative.standard.ms2mass6.mzExpected);
-            Console.WriteLine(this.report.negative.standard.ms2mass6.abundance);
+                if (this.report.negative.polarityPerformed)
+                {
+                    Console.Write(this.report.negative.standard.ms1mass1.mzExpected + ": ");
+                    Console.WriteLine(this.report.negative.standard.ms1mass1.abundance);
+                    Console.Write(this.report.negative.standard.ms1mass2.mzExpected + ": ");
+                    Console.WriteLine(this.report.negative.standard.ms1mass2.abundance);
+                    Console.Write(this.report.negative.standard.ms1mass3.mzExpected + ": ");
+                    Console.WriteLine(this.report.negative.standard.ms1mass3.abundance);
+                    Console.Write(this.report.negative.standard.ms1mass4.mzExpected + ": ");
+                    Console.WriteLine(this.report.negative.standard.ms1mass4.abundance);
+                    Console.Write(this.report.negative.standard.ms1mass5.mzExpected + ": ");
+                    Console.WriteLine(this.report.negative.standard.ms1mass5.abundance);
+                    Console.Write(this.report.negative.standard.ms1mass6.mzExpected + ": ");
+                    Console.WriteLine(this.report.negative.standard.ms1mass6.abundance);
+
+                    Console.Write(this.report.negative.standard.ms2mass1.mzExpected + ": ");
+                    Console.WriteLine(this.report.negative.standard.ms2mass1.abundance);
+                    Console.Write(this.report.negative.standard.ms2mass2.mzExpected + ": ");
+                    Console.WriteLine(this.report.negative.standard.ms2mass2.abundance);
+                    Console.Write(this.report.negative.standard.ms2mass3.mzExpected + ": ");
+                    Console.WriteLine(this.report.negative.standard.ms2mass3.abundance);
+                    Console.Write(this.report.negative.standard.ms2mass4.mzExpected + ": ");
+                    Console.WriteLine(this.report.negative.standard.ms2mass4.abundance);
+                    Console.Write(this.report.negative.standard.ms2mass5.mzExpected + ": ");
+                    Console.WriteLine(this.report.negative.standard.ms2mass5.abundance);
+                    Console.Write(this.report.negative.standard.ms2mass6.mzExpected + ": ");
+                    Console.WriteLine(this.report.negative.standard.ms2mass6.abundance);
+                }
+            }
+
+            
 
         }
 
