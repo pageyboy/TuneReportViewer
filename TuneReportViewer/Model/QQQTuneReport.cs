@@ -24,6 +24,9 @@ namespace TuneReportViewer.Model
         public DateTime tuneDateTime { get; set; }
         public string tuneType { get; set; }
 
+        public int posemv { get; set; }
+        public int negemv { get; set; }
+
         public float positivemass1 { get; set; }
         public float positivemass2 { get; set; }
         public float positivemass3 { get; set; }
@@ -172,6 +175,27 @@ namespace TuneReportViewer.Model
             {
                 for (int i = 0; i < root.ChildNodes.Count; i++)
                 {
+                    if (root.ChildNodes[i].Name == "QQQTuneFile")
+                    {
+                        XmlNodeList nodes = root.ChildNodes[i].SelectNodes("//positiveIonParameters//tuneParameters");
+                        foreach (XmlNode node in nodes)
+                        {
+                            Console.WriteLine(node["id"].InnerText);
+                            if (node["id"].InnerText == "EMV")
+                            {
+                                posemv = int.Parse(node["setting"].InnerText);
+                            }
+                        }
+                        nodes = root.ChildNodes[i].SelectNodes("//negativeIonParameters//tuneParameters");
+                        foreach (XmlNode node in nodes)
+                        {
+                            Console.WriteLine(node["id"].InnerText);
+                            if (node["id"].InnerText == "EMV")
+                            {
+                                negemv = int.Parse(node["setting"].InnerText);
+                            }
+                        }
+                    }
                     if ((root.ChildNodes[i].Name == "QQQTuneInfo") && root.ChildNodes[i].HasChildNodes == true)
                     {
                         XmlNode QQQTuneInfo = root.ChildNodes[i];
