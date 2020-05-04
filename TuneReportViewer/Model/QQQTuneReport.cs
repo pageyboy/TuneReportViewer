@@ -16,6 +16,7 @@ namespace TuneReportViewer.Model
         // Class members.
         //
         // Property.
+        
         public string folderPath { get; set; }
         public fullReport report { get; set; }
         private string tuneReportFilePath { get; set; }
@@ -23,6 +24,56 @@ namespace TuneReportViewer.Model
         public DateTime tuneDateTime { get; set; }
         public string tuneType { get; set; }
 
+        public float positivemass1 { get; set; }
+        public float positivemass2 { get; set; }
+        public float positivemass3 { get; set; }
+        public float positivemass4 { get; set; }
+        public float positivemass5 { get; set; }
+        public float positivemass6 { get; set; }
+
+        public float positivestandardms1mass1Ab { get; set; }
+        public float positivestandardms1mass2Ab { get; set; }
+        public float positivestandardms1mass3Ab { get; set; }
+        public float positivestandardms1mass4Ab { get; set; }
+        public float positivestandardms1mass5Ab { get; set; }
+        public float positivestandardms1mass6Ab { get; set; }
+
+        public float positivestandardms2mass1Ab { get; set; }
+        public float positivestandardms2mass2Ab { get; set; }
+        public float positivestandardms2mass3Ab { get; set; }
+        public float positivestandardms2mass4Ab { get; set; }
+        public float positivestandardms2mass5Ab { get; set; }
+        public float positivestandardms2mass6Ab { get; set; }
+
+        public float positivewidems1mass1Ab { get; set; }
+        public float positivewidems1mass2Ab { get; set; }
+        public float positivewidems1mass3Ab { get; set; }
+        public float positivewidems1mass4Ab { get; set; }
+        public float positivewidems1mass5Ab { get; set; }
+        public float positivewidems1mass6Ab { get; set; }
+
+        public float positivewidems2mass1Ab { get; set; }
+        public float positivewidems2mass2Ab { get; set; }
+        public float positivewidems2mass3Ab { get; set; }
+        public float positivewidems2mass4Ab { get; set; }
+        public float positivewidems2mass5Ab { get; set; }
+        public float positivewidems2mass6Ab { get; set; }
+
+        public float positivewidestms1mass1Ab { get; set; }
+        public float positivewidestms1mass2Ab { get; set; }
+        public float positivewidestms1mass3Ab { get; set; }
+        public float positivewidestms1mass4Ab { get; set; }
+        public float positivewidestms1mass5Ab { get; set; }
+        public float positivewidestms1mass6Ab { get; set; }
+
+        public float positivewidestms2mass1Ab { get; set; }
+        public float positivewidestms2mass2Ab { get; set; }
+        public float positivewidestms2mass3Ab { get; set; }
+        public float positivewidestms2mass4Ab { get; set; }
+        public float positivewidestms2mass5Ab { get; set; }
+        public float positivewidestms2mass6Ab { get; set; }
+
+        #region Other QQQReport Subclasses
         public class fullReport
         {
             public polarity positive { get; set; }
@@ -35,6 +86,7 @@ namespace TuneReportViewer.Model
             public resolution standard { get; set; }
             public resolution wide { get; set; }
             public resolution widest { get; set; }
+            public int emv { get; set; }
         }
 
         public class resolution
@@ -58,6 +110,8 @@ namespace TuneReportViewer.Model
             public float mzExpected { get; set; }
             public float abundance { get; set; }
         }
+
+        #endregion
 
         // Method
 
@@ -131,6 +185,55 @@ namespace TuneReportViewer.Model
                                 case "PositiveResults":
                                     report.positive = readPolarityResults(QQQTuneInfo.ChildNodes[x].FirstChild);
                                     report.positive.polarityPerformed = true;
+                                    this.positivemass1 = report.positive.standard.ms1mass1.mzExpected;
+                                    this.positivemass2 = report.positive.standard.ms1mass2.mzExpected;
+                                    this.positivemass3 = report.positive.standard.ms1mass3.mzExpected;
+                                    this.positivemass4 = report.positive.standard.ms1mass4.mzExpected;
+                                    this.positivemass5 = report.positive.standard.ms1mass5.mzExpected;
+                                    this.positivemass6 = report.positive.standard.ms1mass6.mzExpected;
+
+                                    this.positivestandardms1mass1Ab = report.positive.standard.ms1mass1.abundance;
+                                    this.positivestandardms1mass2Ab = report.positive.standard.ms1mass2.abundance;
+                                    this.positivestandardms1mass3Ab = report.positive.standard.ms1mass3.abundance;
+                                    this.positivestandardms1mass4Ab = report.positive.standard.ms1mass4.abundance;
+                                    this.positivestandardms1mass5Ab = report.positive.standard.ms1mass5.abundance;
+                                    this.positivestandardms1mass6Ab = report.positive.standard.ms1mass6.abundance;
+
+                                    this.positivestandardms2mass1Ab = report.positive.standard.ms2mass1.abundance;
+                                    this.positivestandardms2mass2Ab = report.positive.standard.ms2mass2.abundance;
+                                    this.positivestandardms2mass3Ab = report.positive.standard.ms2mass3.abundance;
+                                    this.positivestandardms2mass4Ab = report.positive.standard.ms2mass4.abundance;
+                                    this.positivestandardms2mass5Ab = report.positive.standard.ms2mass5.abundance;
+                                    this.positivestandardms2mass6Ab = report.positive.standard.ms2mass6.abundance;
+
+                                    this.positivewidems1mass1Ab = report.positive.wide.ms1mass1.abundance;
+                                    this.positivewidems1mass2Ab = report.positive.wide.ms1mass2.abundance;
+                                    this.positivewidems1mass3Ab = report.positive.wide.ms1mass3.abundance;
+                                    this.positivewidems1mass4Ab = report.positive.wide.ms1mass4.abundance;
+                                    this.positivewidems1mass5Ab = report.positive.wide.ms1mass5.abundance;
+                                    this.positivewidems1mass6Ab = report.positive.wide.ms1mass6.abundance;
+
+                                    this.positivewidems2mass1Ab = report.positive.wide.ms2mass1.abundance;
+                                    this.positivewidems2mass2Ab = report.positive.wide.ms2mass2.abundance;
+                                    this.positivewidems2mass3Ab = report.positive.wide.ms2mass3.abundance;
+                                    this.positivewidems2mass4Ab = report.positive.wide.ms2mass4.abundance;
+                                    this.positivewidems2mass5Ab = report.positive.wide.ms2mass5.abundance;
+                                    this.positivewidems2mass6Ab = report.positive.wide.ms2mass6.abundance;
+
+                                    this.positivewidestms1mass1Ab = report.positive.widest.ms1mass1.abundance;
+                                    this.positivewidestms1mass2Ab = report.positive.widest.ms1mass2.abundance;
+                                    this.positivewidestms1mass3Ab = report.positive.widest.ms1mass3.abundance;
+                                    this.positivewidestms1mass4Ab = report.positive.widest.ms1mass4.abundance;
+                                    this.positivewidestms1mass5Ab = report.positive.widest.ms1mass5.abundance;
+                                    this.positivewidestms1mass6Ab = report.positive.widest.ms1mass6.abundance;
+
+                                    this.positivewidestms2mass1Ab = report.positive.widest.ms2mass1.abundance;
+                                    this.positivewidestms2mass2Ab = report.positive.widest.ms2mass2.abundance;
+                                    this.positivewidestms2mass3Ab = report.positive.widest.ms2mass3.abundance;
+                                    this.positivewidestms2mass4Ab = report.positive.widest.ms2mass4.abundance;
+                                    this.positivewidestms2mass5Ab = report.positive.widest.ms2mass5.abundance;
+                                    this.positivewidestms2mass6Ab = report.positive.widest.ms2mass6.abundance;
+
                                     break;
                                 case "NegativeResults":
                                     report.negative = readPolarityResults(QQQTuneInfo.ChildNodes[x].FirstChild);

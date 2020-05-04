@@ -2,6 +2,7 @@
 using System.Windows;
 using TuneReportViewer.Model;
 using System.Collections.Generic;
+using TuneReportViewer.View;
 
 namespace TuneReportViewer
 {
