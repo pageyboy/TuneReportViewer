@@ -76,6 +76,55 @@ namespace TuneReportViewer.Model
         public float positivewidestms2mass5Ab { get; set; }
         public float positivewidestms2mass6Ab { get; set; }
 
+        public float negativemass1 { get; set; }
+        public float negativemass2 { get; set; }
+        public float negativemass3 { get; set; }
+        public float negativemass4 { get; set; }
+        public float negativemass5 { get; set; }
+        public float negativemass6 { get; set; }
+
+        public float negativestandardms1mass1Ab { get; set; }
+        public float negativestandardms1mass2Ab { get; set; }
+        public float negativestandardms1mass3Ab { get; set; }
+        public float negativestandardms1mass4Ab { get; set; }
+        public float negativestandardms1mass5Ab { get; set; }
+        public float negativestandardms1mass6Ab { get; set; }
+
+        public float negativestandardms2mass1Ab { get; set; }
+        public float negativestandardms2mass2Ab { get; set; }
+        public float negativestandardms2mass3Ab { get; set; }
+        public float negativestandardms2mass4Ab { get; set; }
+        public float negativestandardms2mass5Ab { get; set; }
+        public float negativestandardms2mass6Ab { get; set; }
+
+        public float negativewidems1mass1Ab { get; set; }
+        public float negativewidems1mass2Ab { get; set; }
+        public float negativewidems1mass3Ab { get; set; }
+        public float negativewidems1mass4Ab { get; set; }
+        public float negativewidems1mass5Ab { get; set; }
+        public float negativewidems1mass6Ab { get; set; }
+
+        public float negativewidems2mass1Ab { get; set; }
+        public float negativewidems2mass2Ab { get; set; }
+        public float negativewidems2mass3Ab { get; set; }
+        public float negativewidems2mass4Ab { get; set; }
+        public float negativewidems2mass5Ab { get; set; }
+        public float negativewidems2mass6Ab { get; set; }
+
+        public float negativewidestms1mass1Ab { get; set; }
+        public float negativewidestms1mass2Ab { get; set; }
+        public float negativewidestms1mass3Ab { get; set; }
+        public float negativewidestms1mass4Ab { get; set; }
+        public float negativewidestms1mass5Ab { get; set; }
+        public float negativewidestms1mass6Ab { get; set; }
+
+        public float negativewidestms2mass1Ab { get; set; }
+        public float negativewidestms2mass2Ab { get; set; }
+        public float negativewidestms2mass3Ab { get; set; }
+        public float negativewidestms2mass4Ab { get; set; }
+        public float negativewidestms2mass5Ab { get; set; }
+        public float negativewidestms2mass6Ab { get; set; }
+
         #region Other QQQReport Subclasses
         public class fullReport
         {
@@ -262,6 +311,56 @@ namespace TuneReportViewer.Model
                                 case "NegativeResults":
                                     report.negative = readPolarityResults(QQQTuneInfo.ChildNodes[x].FirstChild);
                                     report.negative.polarityPerformed = true;
+
+                                    this.negativemass1 = report.negative.standard.ms1mass1.mzExpected;
+                                    this.negativemass2 = report.negative.standard.ms1mass2.mzExpected;
+                                    this.negativemass3 = report.negative.standard.ms1mass3.mzExpected;
+                                    this.negativemass4 = report.negative.standard.ms1mass4.mzExpected;
+                                    this.negativemass5 = report.negative.standard.ms1mass5.mzExpected;
+                                    this.negativemass6 = report.negative.standard.ms1mass6.mzExpected;
+
+                                    this.negativestandardms1mass1Ab = report.negative.standard.ms1mass1.abundance;
+                                    this.negativestandardms1mass2Ab = report.negative.standard.ms1mass2.abundance;
+                                    this.negativestandardms1mass3Ab = report.negative.standard.ms1mass3.abundance;
+                                    this.negativestandardms1mass4Ab = report.negative.standard.ms1mass4.abundance;
+                                    this.negativestandardms1mass5Ab = report.negative.standard.ms1mass5.abundance;
+                                    this.negativestandardms1mass6Ab = report.negative.standard.ms1mass6.abundance;
+
+                                    this.negativestandardms2mass1Ab = report.negative.standard.ms2mass1.abundance;
+                                    this.negativestandardms2mass2Ab = report.negative.standard.ms2mass2.abundance;
+                                    this.negativestandardms2mass3Ab = report.negative.standard.ms2mass3.abundance;
+                                    this.negativestandardms2mass4Ab = report.negative.standard.ms2mass4.abundance;
+                                    this.negativestandardms2mass5Ab = report.negative.standard.ms2mass5.abundance;
+                                    this.negativestandardms2mass6Ab = report.negative.standard.ms2mass6.abundance;
+
+                                    this.negativewidems1mass1Ab = report.negative.wide.ms1mass1.abundance;
+                                    this.negativewidems1mass2Ab = report.negative.wide.ms1mass2.abundance;
+                                    this.negativewidems1mass3Ab = report.negative.wide.ms1mass3.abundance;
+                                    this.negativewidems1mass4Ab = report.negative.wide.ms1mass4.abundance;
+                                    this.negativewidems1mass5Ab = report.negative.wide.ms1mass5.abundance;
+                                    this.negativewidems1mass6Ab = report.negative.wide.ms1mass6.abundance;
+
+                                    this.negativewidems2mass1Ab = report.negative.wide.ms2mass1.abundance;
+                                    this.negativewidems2mass2Ab = report.negative.wide.ms2mass2.abundance;
+                                    this.negativewidems2mass3Ab = report.negative.wide.ms2mass3.abundance;
+                                    this.negativewidems2mass4Ab = report.negative.wide.ms2mass4.abundance;
+                                    this.negativewidems2mass5Ab = report.negative.wide.ms2mass5.abundance;
+                                    this.negativewidems2mass6Ab = report.negative.wide.ms2mass6.abundance;
+
+                                    this.negativewidestms1mass1Ab = report.negative.widest.ms1mass1.abundance;
+                                    this.negativewidestms1mass2Ab = report.negative.widest.ms1mass2.abundance;
+                                    this.negativewidestms1mass3Ab = report.negative.widest.ms1mass3.abundance;
+                                    this.negativewidestms1mass4Ab = report.negative.widest.ms1mass4.abundance;
+                                    this.negativewidestms1mass5Ab = report.negative.widest.ms1mass5.abundance;
+                                    this.negativewidestms1mass6Ab = report.negative.widest.ms1mass6.abundance;
+
+                                    this.negativewidestms2mass1Ab = report.negative.widest.ms2mass1.abundance;
+                                    this.negativewidestms2mass2Ab = report.negative.widest.ms2mass2.abundance;
+                                    this.negativewidestms2mass3Ab = report.negative.widest.ms2mass3.abundance;
+                                    this.negativewidestms2mass4Ab = report.negative.widest.ms2mass4.abundance;
+                                    this.negativewidestms2mass5Ab = report.negative.widest.ms2mass5.abundance;
+                                    this.negativewidestms2mass6Ab = report.negative.widest.ms2mass6.abundance;
+
                                     break;
                                 default: break;
                             }
