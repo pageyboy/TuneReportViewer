@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" x:Class="TuneReportViewer.MainWindow"
         mc:Ignorable="d"
         Title="Tune Report Viewer" Height="646.704" Width="1084.076" MinWidth="800" MinHeight="400">
@@ -320,15 +321,13 @@
                 <TextBox x:Name="txtBox_FolderPath" Margin="5" DockPanel.Dock="Left" VerticalContentAlignment="Center"/>
             </DockPanel>
         </DockPanel>
-        <DockPanel DockPanel.Dock="Bottom" Background="Orange" Height="Auto" VerticalAlignment="Center">
+        <DockPanel DockPanel.Dock="Bottom" Background="#0d8ad7" Height="Auto" VerticalAlignment="Center">
             <Grid VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="200"/>
                 </Grid.ColumnDefinitions>
-                <Grid Grid.Column="0" HorizontalAlignment="Left">
-                    <ProgressBar Width="100" Margin="5" Background="White"/>
-                </Grid>
+                <Grid Grid.Column="0" HorizontalAlignment="Left"/>
                 <UniformGrid Grid.Column="1" Rows="1" VerticalAlignment="Center">
                     <Button Margin="5" Click="btn_SearchClicked" Background="White">
                         <DockPanel>
@@ -339,26 +338,43 @@
                 </UniformGrid>
             </Grid>
         </DockPanel>
-        <DockPanel Background="Green">
-            <DockPanel DockPanel.Dock="Top" VerticalAlignment="Top" Height="35" Background="#0d8ad7">
-                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
-                    <TextBlock Margin="5,5,30,5" Text="DISPLAY OPTIONS" VerticalAlignment="Center" FontWeight="Bold" Foreground="White"/>
-                    <RadioButton GroupName="Polarity" Click="Filter_Click" Name="radBtn_Pos" IsChecked="True" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" Margin="0, 0, 25, 0">Positive</RadioButton>
-                    <RadioButton GroupName="Polarity" Click="Filter_Click" Name="radBtn_Neg" VerticalAlignment="Center" FontWeight="Bold" Foreground="White"  Margin="0, 0, 25, 0">Negative</RadioButton>
-                    <CheckBox Click="Filter_Click" Name="chkBox_Filter" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" IsChecked="True" Margin="0, 0, 25, 0">Filter Failed Tunes</CheckBox>
-                    <RadioButton GroupName="Resolution" Click="Filter_Click" Name="radBtn_Res1" IsChecked="True" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" Margin="0, 0, 25, 0">Resolution 1</RadioButton>
-                    <RadioButton GroupName="Resolution" Click="Filter_Click" Name ="radBtn_Res2" VerticalAlignment="Center" FontWeight="Bold" Foreground="White"  Margin="0, 0, 25, 0">Resolution 2</RadioButton>
-                    <RadioButton GroupName="Resolution" Click="Filter_Click" Name="radBtn_Res3" IsChecked="True" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" Margin="0, 0, 25, 0">Resolution 3</RadioButton>
-                </StackPanel>
+        <DockPanel>
+            <DockPanel DockPanel.Dock="Top">
+                <DockPanel DockPanel.Dock="Top" Height="35" Background="#0d8ad7">
+                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                        <TextBlock Margin="5,5,30,5" Text="TABLE DISPLAY OPTIONS  " VerticalAlignment="Center" FontWeight="Bold" Foreground="White"/>
+                        <RadioButton GroupName="Polarity" Click="Filter_Click" Name="radBtn_Pos" IsChecked="True" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" Margin="0, 0, 25, 0">Positive</RadioButton>
+                        <RadioButton GroupName="Polarity" Click="Filter_Click" Name="radBtn_Neg" VerticalAlignment="Center" FontWeight="Bold" Foreground="White"  Margin="0, 0, 25, 0">Negative</RadioButton>
+                        <CheckBox Click="Filter_Click" Name="chkBox_Filter" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" IsChecked="True" Margin="0, 0, 25, 0">Filter Failed Tunes</CheckBox>
+                        <RadioButton GroupName="Resolution" Click="Filter_Click" Name="radBtn_Res1" IsChecked="True" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" Margin="0, 0, 25, 0">Resolution 1</RadioButton>
+                        <RadioButton GroupName="Resolution" Click="Filter_Click" Name ="radBtn_Res2" VerticalAlignment="Center" FontWeight="Bold" Foreground="White"  Margin="0, 0, 25, 0">Resolution 2</RadioButton>
+                        <RadioButton GroupName="Resolution" Click="Filter_Click" Name="radBtn_Res3" IsChecked="True" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" Margin="0, 0, 25, 0">Resolution 3</RadioButton>
+                    </StackPanel>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Bottom" Height="35" Background="#0d8ad7">
+                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                        <TextBlock Margin="5,5,30,5" Text="GRAPH DISPLAY OPTIONS" VerticalAlignment="Center" FontWeight="Bold" Foreground="White"/>
+                        <CheckBox Name="chkBox_Abundance" Click="GraphFilter_Click" IsChecked="True" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" Margin="0, 0, 25, 0">Abundance</CheckBox>
+                        <RadioButton GroupName="Mass" Name="radBtn_Mass1" Click="GraphFilter_Click" IsChecked="True" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" Margin="0, 0, 25, 0">Mass 1</RadioButton>
+                        <RadioButton GroupName="Mass" Name="radBtn_Mass2" Click="GraphFilter_Click" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" Margin="0, 0, 25, 0">Mass 2</RadioButton>
+                        <RadioButton GroupName="Mass" Name="radBtn_Mass3" Click="GraphFilter_Click" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" Margin="0, 0, 25, 0">Mass 3</RadioButton>
+                        <RadioButton GroupName="Mass" Name="radBtn_Mass4" Click="GraphFilter_Click" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" Margin="0, 0, 25, 0">Mass 4</RadioButton>
+                        <RadioButton GroupName="Mass" Name="radBtn_Mass5" Click="GraphFilter_Click" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" Margin="0, 0, 25, 0">Mass 5</RadioButton>
+                        <RadioButton GroupName="Mass" Name="radBtn_Mass6" Click="GraphFilter_Click" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" Margin="0, 0, 25, 0">Mass 6</RadioButton>
+                        <CheckBox Name="chkBox_EMV" Click="GraphFilter_Click" VerticalAlignment="Center" FontWeight="Bold" Foreground="White"  Margin="0, 0, 25, 0">EMV</CheckBox>
+                    </StackPanel>
+                </DockPanel>
             </DockPanel>
             <DockPanel Height="Auto">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="322*"/>
+                        <ColumnDefinition Width="216*"/>
                         <ColumnDefinition Width="2"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="273*"/>
+                        <ColumnDefinition Width="264*"/>
                     </Grid.ColumnDefinitions>
-                    <ListView Margin="10" Name="lvUsers">
+                    <ListView Margin="10" Name="DataTable" Grid.ColumnSpan="2">
                         <ListView.Resources>
                             <DataTemplate x:Key="FirstCell">
                                 <StackPanel Orientation="Horizontal">
@@ -372,7 +388,7 @@
                                 <GridViewColumn Header="Autotune Date/Time" DisplayMemberBinding="{Binding tuneDateTime, StringFormat='yyyy-MMM-dd HH:mm:ss'}" />
                                 <GridViewColumn Header="Pass Status" DisplayMemberBinding="{Binding passStatus, StringFormat='{}{0:0;;#}'}" />
                                 <GridViewColumn Header="Type" DisplayMemberBinding="{Binding tuneType, StringFormat='{}{0:0;;#}'}" />
-                                <GridViewColumn Header="Pos EMV" Width="50" DisplayMemberBinding="{Binding posemv, StringFormat='{}{0:0;;#}'}" />
+                                <GridViewColumn Header="Pos EMV" Width="50" DisplayMemberBinding="{Binding posemv, StringFormat='{}{0:0;;#;NaN}'}" />
                                 <GridViewColumn Header="Neg EMV" Width="150" DisplayMemberBinding="{Binding negemv, StringFormat='{}{0:0;;#}'}" />
                                 <GridViewColumn Header="MS1 Mass 1" Width="100" DisplayMemberBinding="{Binding ms1_1, StringFormat='{}{0:0;;#}'}" />
                                 <GridViewColumn Header="MS1 Mass 2" Width="100" DisplayMemberBinding="{Binding ms1_2, StringFormat='{}{0:0;;#}'}" />
@@ -389,8 +405,16 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
-                    <TextBlock Grid.Column="2" FontSize="55" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap"><Run Text="Chart"/></TextBlock>
+                    <GridSplitter Grid.Column="2" Width="5" HorizontalAlignment="Stretch" Grid.ColumnSpan="2" Margin="0,0,270,0" />
+                    <lvc:CartesianChart Series="{Binding SeriesCollection}" LegendLocation="Right" Grid.Column="3" Grid.ColumnSpan="2">
+                        <lvc:CartesianChart.AxisY>
+                            <lvc:Axis MinValue="0" Title="Abundance"></lvc:Axis>
+                        </lvc:CartesianChart.AxisY>
+                        <lvc:CartesianChart.AxisX>
+                            <lvc:Axis Title="Date" Labels="{Binding Labels}" LabelFormatter="{Binding Formatter}"></lvc:Axis>
+                        </lvc:CartesianChart.AxisX>
+                    </lvc:CartesianChart>
+
                 </Grid>
             </DockPanel>
         </DockPanel>
