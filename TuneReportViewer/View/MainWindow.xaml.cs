@@ -23,13 +23,19 @@ namespace TuneReportViewer
     public partial class MainWindow : Window
     {
 
+        // Load Main Window and initialize SeriesCollection
         public MainWindow()
         {
             InitializeComponent();
             txtBox_FolderPath.Text = "C:\\Users\\chripage\\OneDrive - Agilent Technologies\\Side Projects\\Visual Studio\\tune_report_viewer\\Old Versions\\Tune Report Viewer\\3_Example Data\\G6410B";
             SeriesCollection = new SeriesCollection();
         }
-
+        
+        /// <summary>
+        /// Method for Browse Button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btn_BrowseClicked(object sender, RoutedEventArgs e)
         {
             VistaFolderBrowserDialog dialog = new VistaFolderBrowserDialog();
@@ -41,29 +47,80 @@ namespace TuneReportViewer
                 txtBox_FolderPath.Text = dialog.SelectedPath;
         }
 
+        // Set properties for use between various methods
         List<QQQTuneReport> qqqTRList;
         List<TableData> filteredData = new List<TableData>();
         List<TableData> filteredChart = new List<TableData>();
 
+        /// <summary>
+        /// Method for handling the Search Button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btn_SearchClicked(object sender, RoutedEventArgs e)
         {
+            // Run methods to search for Tune Reports
             DataReader dataReader = new DataReader();
             qqqTRList = dataReader.MainProgram(txtBox_FolderPath.Text);
+
+            // Update the table and charts
             UpdateTableandChart();
         }
 
+        /// <summary>
+        /// Method for handling the Export button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btn_ExportClicked(object sender, RoutedEventArgs e)
         {
         }
 
+        /// <summary>
+        /// Class that is a minimum version of the QQQ Tune Report class
+        /// This is the data set that will be tabulated and charted
+        /// </summary>
+        class TableData
+        {
+            public DateTime tuneDateTime { get; set; }
+            public bool passStatus { get; set; }
+            public string tuneType { get; set; }
+            public double posemv { get; set; }
+            public double negemv { get; set; }
+            public double ms1_1 { get; set; }
+            public double ms1_2 { get; set; }
+            public double ms1_3 { get; set; }
+            public double ms1_4 { get; set; }
+            public double ms1_5 { get; set; }
+            public double ms1_6 { get; set; }
+            public double ms2_1 { get; set; }
+            public double ms2_2 { get; set; }
+            public double ms2_3 { get; set; }
+            public double ms2_4 { get; set; }
+            public double ms2_5 { get; set; }
+            public double ms2_6 { get; set; }
+        }
+
+        /// <summary>
+        /// Filter the returned data based on the Chart and Table Filter Options
+        /// </summary>
+        /// <param name="NaN"></param>
+        /// <returns>
+        /// Returns a table where null data is either NaN or Zeroed. When NaN is set to true then null
+        /// values are returned as Double.NaN. This data is for use with the Charts. Whereas Zeroed
+        /// data can be string formatted out in the Grid Table. Double.NaN cannot be string formatted out
+        /// </returns>
         List<TableData> FilterData(bool NaN)
         {
+            // Create a new list that will ultimately be returned
             List<TableData> returnTable = new List<TableData>();
+            // Check whether the main data set is not null
             if (qqqTRList != null)
             {
                 for (int i = 0; i < qqqTRList.Count; i++)
                 {
-                    // This tune report should be skipped if the checkbox is checked
+                    // Determine whether the current tune report should be included in the filtered
+                    // dataset or whether it should be filtered out based on polarity or pass status
                     if (chkBox_Filter.IsChecked == true && qqqTRList[i].passStatus == false)
                     {
                         continue;
@@ -80,8 +137,10 @@ namespace TuneReportViewer
                         }
                     }
 
+                    // If the dataset is to be included then initialize a new line of data
                     TableData newTableDataLine = new TableData();
 
+                    // Set the newTableDataLine properties based on the Tune Reports Properties
                     newTableDataLine.tuneDateTime = qqqTRList[i].tuneDateTime;
                     newTableDataLine.passStatus = qqqTRList[i].passStatus;
                     newTableDataLine.tuneType = qqqTRList[i].tuneType;
@@ -183,29 +242,39 @@ namespace TuneReportViewer
                         }
                     }
 
+                    // Add this populated line of data to the list to be returned
                     returnTable.Add(newTableDataLine);
                 }
 
+                // Return the filtered dataset
                 return returnTable;
 
             }
 
+            // This should not be run. The method will either breakout or return by this point
             return null;
 
         }
 
+        // Various properties that are used in setting the chart
         public SeriesCollection SeriesCollection { get; set; }
         public DateTime[] Labels { get; set; }
         public Func<DateTime, string> Formatter { get; set; }
 
+        /// <summary>
+        /// This method populates the LiveChart
+        /// </summary>
         private void PopulateChart()
         {
 
+            // Check that there is filtered data to chart
             if (filteredData.Count != 0)
             {
+                // Set the x axis labels
                 Labels = filteredChart.Select(x => x.tuneDateTime).ToArray();
                 Formatter = value => value.ToString("s");
 
+                // Check if the EMV data should be plotted
                 if (chkBox_EMV.IsChecked == true)
                 {
                     if (radBtn_Pos.IsChecked == true)
@@ -214,7 +283,10 @@ namespace TuneReportViewer
                             new LineSeries
                             {
                                 Title = "Positive EMV",
-                                Values = new ChartValues<double>(filteredChart.Select(x => x.posemv).ToArray())
+                                Values = new ChartValues<double>(filteredChart.Select(x => x.posemv).ToArray()),
+                                Fill = Brushes.Transparent,
+                                Stroke = Brushes.LightBlue,
+                                ScalesYAt = 1
                             }
                         );
                     } else {
@@ -222,12 +294,16 @@ namespace TuneReportViewer
                             new LineSeries
                             {
                                 Title = "Negative EMV",
-                                Values = new ChartValues<double>(filteredChart.Select(x => x.negemv).ToArray())
+                                Values = new ChartValues<double>(filteredChart.Select(x => x.negemv).ToArray()),
+                                Fill = Brushes.Transparent,
+                                Stroke = Brushes.LightBlue,
+                                ScalesYAt = 1
                             }
                         );
                     }
                 }
 
+                // Check if the Abundance data should be plotted
                 if (chkBox_Abundance.IsChecked == true)
                 {
                     if (radBtn_Mass1.IsChecked == true)
@@ -255,14 +331,17 @@ namespace TuneReportViewer
                         new LineSeries
                         {
                             Title = "MS1_2",
-                            Values = new ChartValues<double>(filteredChart.Select(x => x.ms1_2).ToArray())
+                            Values = new ChartValues<double>(filteredChart.Select(x => x.ms1_2).ToArray()),
+                            Fill = Brushes.Transparent,
+                            Stroke = Brushes.LightSkyBlue
                         });
                         SeriesCollection.Add(
                         new LineSeries
                         {
                             Title = "MS2_2",
                             Values = new ChartValues<double>(filteredChart.Select(x => x.ms2_2).ToArray()),
-
+                            Fill = Brushes.Transparent,
+                            Stroke = Brushes.DarkGray
                         });
                     }
                     if (radBtn_Mass3.IsChecked == true)
@@ -271,13 +350,17 @@ namespace TuneReportViewer
                         new LineSeries
                         {
                             Title = "MS1_3",
-                            Values = new ChartValues<double>(filteredChart.Select(x => x.ms1_3).ToArray())
+                            Values = new ChartValues<double>(filteredChart.Select(x => x.ms1_3).ToArray()),
+                            Fill = Brushes.Transparent,
+                            Stroke = Brushes.LightSkyBlue
                         });
                         SeriesCollection.Add(
                         new LineSeries
                         {
                             Title = "MS2_3",
-                            Values = new ChartValues<double>(filteredChart.Select(x => x.ms2_3).ToArray())
+                            Values = new ChartValues<double>(filteredChart.Select(x => x.ms2_3).ToArray()),
+                            Fill = Brushes.Transparent,
+                            Stroke = Brushes.DarkGray
                         });
                     }
                     if (radBtn_Mass4.IsChecked == true)
@@ -286,13 +369,17 @@ namespace TuneReportViewer
                         new LineSeries
                         {
                             Title = "MS1_4",
-                            Values = new ChartValues<double>(filteredChart.Select(x => x.ms1_4).ToArray())
+                            Values = new ChartValues<double>(filteredChart.Select(x => x.ms1_4).ToArray()),
+                            Fill = Brushes.Transparent,
+                            Stroke = Brushes.LightSkyBlue
                         });
                         SeriesCollection.Add(
                         new LineSeries
                         {
                             Title = "MS2_4",
-                            Values = new ChartValues<double>(filteredChart.Select(x => x.ms2_4).ToArray())
+                            Values = new ChartValues<double>(filteredChart.Select(x => x.ms2_4).ToArray()),
+                            Fill = Brushes.Transparent,
+                            Stroke = Brushes.DarkGray
                         });
                     }
                     if (radBtn_Mass5.IsChecked == true)
@@ -301,13 +388,17 @@ namespace TuneReportViewer
                         new LineSeries
                         {
                             Title = "MS1_5",
-                            Values = new ChartValues<double>(filteredChart.Select(x => x.ms1_5).ToArray())
+                            Values = new ChartValues<double>(filteredChart.Select(x => x.ms1_5).ToArray()),
+                            Fill = Brushes.Transparent,
+                            Stroke = Brushes.LightSkyBlue
                         });
                         SeriesCollection.Add(
                         new LineSeries
                         {
                             Title = "MS2_5",
-                            Values = new ChartValues<double>(filteredChart.Select(x => x.ms2_5).ToArray())
+                            Values = new ChartValues<double>(filteredChart.Select(x => x.ms2_5).ToArray()),
+                            Fill = Brushes.Transparent,
+                            Stroke = Brushes.DarkGray
                         });
                     }
                     if (radBtn_Mass6.IsChecked == true)
@@ -316,13 +407,17 @@ namespace TuneReportViewer
                         new LineSeries
                         {
                             Title = "MS1_6",
-                            Values = new ChartValues<double>(filteredChart.Select(x => x.ms1_6).ToArray())
+                            Values = new ChartValues<double>(filteredChart.Select(x => x.ms1_6).ToArray()),
+                            Fill = Brushes.Transparent,
+                            Stroke = Brushes.LightSkyBlue
                         });
                         SeriesCollection.Add(
                         new LineSeries
                         {
                             Title = "MS2_6",
-                            Values = new ChartValues<double>(filteredChart.Select(x => x.ms2_6).ToArray())
+                            Values = new ChartValues<double>(filteredChart.Select(x => x.ms2_6).ToArray()),
+                            Fill = Brushes.Transparent,
+                            Stroke = Brushes.DarkGray
                         });
                     }
                 }
@@ -334,32 +429,21 @@ namespace TuneReportViewer
 
         }
 
-        class TableData
-        {
-            public DateTime tuneDateTime { get; set; }
-            public bool passStatus { get; set; }
-            public string tuneType { get; set; }
-            public double posemv { get; set; }
-            public double negemv { get; set; }
-            public double ms1_1 { get; set; }
-            public double ms1_2 { get; set; }
-            public double ms1_3 { get; set; }
-            public double ms1_4 { get; set; }
-            public double ms1_5 { get; set; }
-            public double ms1_6 { get; set; }
-            public double ms2_1 { get; set; }
-            public double ms2_2 { get; set; }
-            public double ms2_3 { get; set; }
-            public double ms2_4 { get; set; }
-            public double ms2_5 { get; set; }
-            public double ms2_6 { get; set; }
-        }
-
+        /// <summary>
+        /// Method to update the Table based on the various filtering buttons 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Filter_Click(object sender, RoutedEventArgs e)
         {
             UpdateTableandChart();
         }
 
+        /// <summary>
+        /// Method to update the Chart based on the various filtering buttons
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void GraphFilter_Click(object sender, RoutedEventArgs e)
         {
             SeriesCollection.Clear();
@@ -367,13 +451,20 @@ namespace TuneReportViewer
             PopulateChart();
         }
 
+        /// <summary>
+        /// Method to update the Table and Chart based on the various filtering buttons
+        /// </summary>
         private void UpdateTableandChart()
         {
+            // Return and tabulate a filtered List of TableData with null values set to Zeroes
+            // Zeroes can be String Formatted in the Grid Data
             filteredData = FilterData(false);
             DataTable.ItemsSource = filteredData;
             ICollectionView view = CollectionViewSource.GetDefaultView(filteredData);
             view.Refresh();
 
+            // Return and chart a filtered List of TableData with null values set to Double.NaN
+            // Double.NaN is handled by LiveChart, whereas it cannot handle Zeroes natively.
             SeriesCollection.Clear();
             filteredChart = FilterData(true);
             PopulateChart();
