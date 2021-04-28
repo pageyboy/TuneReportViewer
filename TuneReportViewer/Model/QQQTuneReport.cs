@@ -23,6 +23,7 @@ namespace TuneReportViewer.Model
         public bool passStatus { get; set; }
         public DateTime tuneDateTime { get; set; }
         public string tuneType { get; set; }
+        public bool includeInChart { get; set; }
 
         public int posemv { get; set; }
         public int negemv { get; set; }
@@ -202,6 +203,7 @@ namespace TuneReportViewer.Model
 
             if (!CheckStatus())
             {
+                this.includeInChart = false;
                 return;
             }
 
@@ -212,6 +214,7 @@ namespace TuneReportViewer.Model
             polarity negative = new polarity();
             negative.polarityPerformed = false;
             positive.polarityPerformed = false;
+            this.includeInChart = true;
 
             // Create new instance of the document and navigate to the Positive and Negative node.
             // Possibly better way to do this without the loops. So far unable to make other solutions work appropriately.

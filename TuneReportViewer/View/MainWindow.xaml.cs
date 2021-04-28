@@ -7,6 +7,7 @@ using System;
 using System.Windows.Documents;
 using LiveCharts;
 using LiveCharts.Wpf;
+using LiveCharts.Events;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Windows.Media;
@@ -14,6 +15,9 @@ using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Data;
+using System.Windows.Controls;
+using System.Data;
+using System.Collections;
 
 namespace TuneReportViewer
 {
@@ -42,7 +46,7 @@ namespace TuneReportViewer
             dialog.Description = "Please select a folder.";
             dialog.UseDescriptionForTitle = true; // This applies to the Vista style dialog only, not the old dialog.
             if (!VistaFolderBrowserDialog.IsVistaFolderDialogSupported)
-                MessageBox.Show(this, "Because you are not using Windows Vista or later, the regular folder browser dialog will be used. Please use Windows Vista to see the new dialog.", "Sample folder browser dialog");
+                System.Windows.MessageBox.Show(this, "Because you are not using Windows Vista or later, the regular folder browser dialog will be used. Please use Windows Vista to see the new dialog.", "Sample folder browser dialog");
             if ((bool)dialog.ShowDialog(this))
                 txtBox_FolderPath.Text = dialog.SelectedPath;
         }
@@ -80,7 +84,7 @@ namespace TuneReportViewer
         /// Class that is a minimum version of the QQQ Tune Report class
         /// This is the data set that will be tabulated and charted
         /// </summary>
-        class TableData
+        class TableData : IComparable<TableData>
         {
             public DateTime tuneDateTime { get; set; }
             public bool passStatus { get; set; }
@@ -99,6 +103,29 @@ namespace TuneReportViewer
             public double ms2_4 { get; set; }
             public double ms2_5 { get; set; }
             public double ms2_6 { get; set; }
+            public bool includeInChart { get; set; }
+
+            public int CompareTo(TableData compareTableData)
+            {
+                if(compareTableData == null)
+                {
+                    return 1;
+                } else
+                {
+                    return this.tuneDateTime.CompareTo(compareTableData.tuneDateTime);
+                }
+                throw new NotImplementedException();
+            }
+            
+            public bool Equals(TableData other)
+            {
+                if (other == null)
+                {
+                    return false;
+                }
+                return (this.tuneDateTime.Equals(other.tuneDateTime));
+            }
+            
         }
 
         /// <summary>
@@ -137,6 +164,13 @@ namespace TuneReportViewer
                         }
                     }
 
+                    // Filter out if this was a Chart Filtered dataset and the Report was
+                    // chosen to not be included in the chart
+                    if (NaN == true && qqqTRList[i].includeInChart == false)
+                    {
+                        continue;
+                    }
+
                     // If the dataset is to be included then initialize a new line of data
                     TableData newTableDataLine = new TableData();
 
@@ -146,6 +180,7 @@ namespace TuneReportViewer
                     newTableDataLine.tuneType = qqqTRList[i].tuneType;
                     newTableDataLine.posemv = NaN ? (qqqTRList[i].posemv == 0 ? double.NaN : qqqTRList[i].posemv) : qqqTRList[i].posemv;
                     newTableDataLine.negemv = NaN ? (qqqTRList[i].negemv == 0 ? double.NaN : qqqTRList[i].negemv) : qqqTRList[i].negemv;
+                    newTableDataLine.includeInChart = qqqTRList[i].includeInChart;
 
                     if (radBtn_Pos.IsChecked == true)
                     {
@@ -259,7 +294,7 @@ namespace TuneReportViewer
         // Various properties that are used in setting the chart
         public SeriesCollection SeriesCollection { get; set; }
         public DateTime[] Labels { get; set; }
-        public Func<DateTime, string> Formatter { get; set; }
+        public Func<double, string> Formatter { get; set; }
 
         /// <summary>
         /// This method populates the LiveChart
@@ -268,11 +303,11 @@ namespace TuneReportViewer
         {
 
             // Check that there is filtered data to chart
-            if (filteredData.Count != 0)
+            if (filteredChart.Count != 0)
             {
                 // Set the x axis labels
                 Labels = filteredChart.Select(x => x.tuneDateTime).ToArray();
-                Formatter = value => value.ToString("s");
+                this.Formatter = value => new DateTime((long)value * TimeSpan.FromDays(1).Ticks).ToString("yyyy-MM-dd HH:mm:ss");
 
                 // Check if the EMV data should be plotted
                 if (chkBox_EMV.IsChecked == true)
@@ -446,9 +481,7 @@ namespace TuneReportViewer
         /// <param name="e"></param>
         private void GraphFilter_Click(object sender, RoutedEventArgs e)
         {
-            SeriesCollection.Clear();
-            filteredChart = FilterData(true);
-            PopulateChart();
+            UpdateTableandChart();
         }
 
         /// <summary>
@@ -456,19 +489,135 @@ namespace TuneReportViewer
         /// </summary>
         private void UpdateTableandChart()
         {
-            // Return and tabulate a filtered List of TableData with null values set to Zeroes
-            // Zeroes can be String Formatted in the Grid Data
-            filteredData = FilterData(false);
-            DataTable.ItemsSource = filteredData;
-            ICollectionView view = CollectionViewSource.GetDefaultView(filteredData);
-            view.Refresh();
+            UpdateTable();
+            UpdateChart();
+        }
 
-            // Return and chart a filtered List of TableData with null values set to Double.NaN
-            // Double.NaN is handled by LiveChart, whereas it cannot handle Zeroes natively.
-            SeriesCollection.Clear();
-            filteredChart = FilterData(true);
-            PopulateChart();
+        private void UpdateTable()
+        {
+            if (qqqTRList != null)
+            {
+                // Return and tabulate a filtered List of TableData with null values set to Zeroes
+                // Zeroes can be String Formatted in the Grid Data
+                filteredData = FilterData(false);
+                filteredData.Sort();
+                DataTable.ItemsSource = filteredData;
+                ICollectionView view = CollectionViewSource.GetDefaultView(filteredData);
+                view.Refresh();
+            }
+        }
+
+        private void UpdateChart()
+        {
+            if (qqqTRList != null)
+            {
+                // Return and chart a filtered List of TableData with null values set to Double.NaN
+                // Double.NaN is handled by LiveChart, whereas it cannot handle Zeroes natively.
+                SeriesCollection.Clear();
+                filteredChart = FilterData(true);
+                filteredChart.Sort();
+                PopulateChart();
+            }
+        }
+
+        GridViewColumnHeader _lastHeaderClicked = null;
+        ListSortDirection _lastDirection = ListSortDirection.Ascending;
+
+        /// <summary>
+        /// Method to handle Grid View Column Header clicking
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void GridViewColumnHeaderClickedHandler(object sender, RoutedEventArgs e)
+        {
+            var headerClicked = e.OriginalSource as GridViewColumnHeader;
+            ListSortDirection direction;
+
+            if (headerClicked != null)
+            {
+                if (headerClicked.Role != GridViewColumnHeaderRole.Padding)
+                {
+                    if (headerClicked != _lastHeaderClicked)
+                    {
+                        direction = ListSortDirection.Ascending;
+                    }
+                    else
+                    {
+                        if (_lastDirection == ListSortDirection.Ascending)
+                        {
+                            direction = ListSortDirection.Descending;
+                        }
+                        else
+                        {
+                            direction = ListSortDirection.Ascending;
+                        }
+                    }
+
+                    var columnBinding = headerClicked.Column.DisplayMemberBinding as System.Windows.Data.Binding;
+                    var sortBy = columnBinding?.Path.Path ?? headerClicked.Column.Header as string;
+
+                    Sort(sortBy, direction);
+
+                    if (direction == ListSortDirection.Ascending)
+                    {
+                        headerClicked.Column.HeaderTemplate =
+                          Resources["HeaderTemplateArrowUp"] as DataTemplate;
+                    }
+                    else
+                    {
+                        headerClicked.Column.HeaderTemplate =
+                          Resources["HeaderTemplateArrowDown"] as DataTemplate;
+                    }
+
+                    // Remove arrow from previously sorted header
+                    if (_lastHeaderClicked != null && _lastHeaderClicked != headerClicked)
+                    {
+                        _lastHeaderClicked.Column.HeaderTemplate = null;
+                    }
+
+                    _lastHeaderClicked = headerClicked;
+                    _lastDirection = direction;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sort method
+        /// </summary>
+        /// <param name="sortBy"></param>
+        /// <param name="direction"></param>
+        private void Sort(string sortBy, ListSortDirection direction)
+        {
+            ICollectionView dataView = CollectionViewSource.GetDefaultView(DataTable.ItemsSource);
+
+            dataView.SortDescriptions.Clear();
+            SortDescription sd = new SortDescription(sortBy, direction);
+            dataView.SortDescriptions.Add(sd);
+            dataView.Refresh();
+        }
+
+
+        private void Include_Clicked(object sender, RoutedEventArgs e)
+        {
+            var cb = sender as CheckBox;
+            TableData item = (TableData)cb.DataContext;
+            for (int i = 0; i < qqqTRList.Count; i++)
+            {
+                if (qqqTRList[i].tuneDateTime == item.tuneDateTime)
+                {
+                    qqqTRList[i].includeInChart = item.includeInChart;
+                    break;
+                }
+            }
+
+            UpdateChart();
 
         }
+
+        private void Chart_OnDataHover(object sender, ChartPoint p)
+        {
+            Console.WriteLine("[EVENT] you hovered over " + p.X + ", " + p.Y);
+        }
+
     }
 }

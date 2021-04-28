@@ -343,8 +343,8 @@
                 <DockPanel DockPanel.Dock="Top" Height="35" Background="#0d8ad7" >
                     <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
                         <TextBlock Margin="5,5,30,5" Text="TABLE DISPLAY OPTIONS  " VerticalAlignment="Center" FontWeight="Bold" Foreground="White"/>
-                        <RadioButton GroupName="Polarity" Click="Filter_Click" Name="radBtn_Pos" IsChecked="True" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" Margin="0, 0, 25, 0">Positive</RadioButton>
-                        <RadioButton GroupName="Polarity" Click="Filter_Click" Name="radBtn_Neg" VerticalAlignment="Center" FontWeight="Bold" Foreground="White"  Margin="0, 0, 25, 0">Negative</RadioButton>
+                        <RadioButton GroupName="Polarity" Click="Filter_Click" Name="radBtn_Pos" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" Margin="0, 0, 25, 0">Positive</RadioButton>
+                        <RadioButton GroupName="Polarity" Click="Filter_Click" Name="radBtn_Neg" IsChecked="true" VerticalAlignment="Center" FontWeight="Bold" Foreground="White"  Margin="0, 0, 25, 0">Negative</RadioButton>
                         <CheckBox Click="Filter_Click" Name="chkBox_Filter" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" IsChecked="True" Margin="0, 0, 25, 0">Filter Failed Tunes</CheckBox>
                         <RadioButton GroupName="Resolution" Click="Filter_Click" Name="radBtn_Res1" IsChecked="True" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" Margin="0, 0, 25, 0">Resolution 1</RadioButton>
                         <RadioButton GroupName="Resolution" Click="Filter_Click" Name ="radBtn_Res2" VerticalAlignment="Center" FontWeight="Bold" Foreground="White"  Margin="0, 0, 25, 0">Resolution 2</RadioButton>
@@ -374,11 +374,11 @@
                         <ColumnDefinition Width="273*"/>
                         <ColumnDefinition Width="264*"/>
                     </Grid.ColumnDefinitions>
-                    <ListView Margin="10" Name="DataTable" Grid.ColumnSpan="2">
+                    <ListView Margin="10" Name="DataTable" Grid.ColumnSpan="2" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
                         <ListView.Resources>
                             <DataTemplate x:Key="FirstCell">
-                                <StackPanel Orientation="Horizontal">
-                                    <CheckBox HorizontalAlignment="Center" IsChecked="True"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <CheckBox IsChecked="{Binding includeInChart, Mode=TwoWay}" Click="Include_Clicked"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ListView.Resources>
@@ -412,7 +412,9 @@
                                 <Setter Property="IsEnabled" Value="False"></Setter>
                             </Style>
                         </Grid.Resources>
-                        <lvc:CartesianChart Background="White" Series="{Binding SeriesCollection}" LegendLocation="Right">
+                        <lvc:CartesianChart Name="DataChart" Background="White" Series="{Binding SeriesCollection}"
+                                            LegendLocation="Right" DataHover="Chart_OnDataHover"
+                                            DataHoverCommand="{Binding DataHoverCommand}">
                             <lvc:CartesianChart.AxisY>
                                 <lvc:Axis MinValue="0" Foreground="DodgerBlue" Title="Abundance"/>
                                 <lvc:Axis MinValue="600" Foreground="LightBlue" Title="EMV (Volts)" Position="RightTop">
