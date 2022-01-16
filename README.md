@@ -2,7 +2,7 @@
 
 This is a C# rewrite of my TuneReportViewer application which was written in VB.Net and prior to learning about Source Control...
 
-The aim was to get a better grasp of C# and to provide a more modern and response UI.
+The aim was to get a better grasp of C# and to provide a more modern and responsive UI.
 
 # To Do
 
